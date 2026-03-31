@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-exec naps2 console "$@"

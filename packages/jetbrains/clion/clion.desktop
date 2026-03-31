@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=CLion
+GenericName=A cross-platform IDE for C and C++
+Exec=clion
+Terminal=false
+Icon=clion
+Type=Application
+Categories=Development;IDE;
+StartupWMClass=jetbrains-clion

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PyCharm Professional
+GenericName=The intelligent Python IDE
+Exec=pycharm-professional
+Terminal=false
+Icon=pycharm-professional
+Type=Application
+Categories=Development;IDE;
+StartupWMClass=jetbrains-pycharm

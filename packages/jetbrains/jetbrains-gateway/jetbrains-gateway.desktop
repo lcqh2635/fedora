@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=JetBrains Gateway
+GenericName=Your single entry point to all remote development environments
+Type=Application
+Categories=Development;IDE;
+Exec=jetbrains-gateway
+Terminal=false
+Icon=jetbrains-gateway
+StartupWMClass=jetbrains-gateway

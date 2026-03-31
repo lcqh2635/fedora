@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=IntelliJ IDEA Ultimate
+GenericName=Capable and Ergonomic Java IDE
+Exec=intellij-idea-ultimate
+Terminal=false
+Icon=intellij-idea-ultimate
+Type=Application
+Categories=Development;IDE;
+StartupWMClass=jetbrains-idea
