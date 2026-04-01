@@ -1,3 +1,7 @@
+# 参考文件 https://github.com/lukasgierth/fedora-packages/blob/main/tools-misc/gnome-shell-extension-copyous/gnome-shell-extension-copyous.spec
+# 源代码仓库 https://github.com/boerdereinar/copyous
+# git clone --depth=1 https://github.com/boerdereinar/copyous.git
+
 # ==============================================================================
 # 1. 宏定义与全局设置
 # ==============================================================================

@@ -1,5 +1,6 @@
+# 参考文件 https://github.com/lukasgierth/fedora-packages/blob/main/tools-misc/gnome-shell-extension-copyous/gnome-shell-extension-copyous.spec
+# 源代码仓库 https://github.com/hermes83/compiz-alike-magic-lamp-effect
 # git clone --depth=1 https://github.com/hermes83/compiz-alike-magic-lamp-effect.git
-# cd compiz-alike-magic-lamp-effect
 
 %global uuid s76-scheduler@mattjakeman.com
 
