@@ -1,61 +1,53 @@
-%global         __provides_exclude_from ^/opt/%{app_name}/.*$
-%global         __requires_exclude_from ^/opt/%{app_name}/.*$
-%global         fullname postman
-%global         app_name Postman
-%global         real_version 12.4.2
-%global         debug_package %{nil}
+# git clone --depth=1 https://github.com/hermes83/compiz-alike-magic-lamp-effect.git
+# cd compiz-alike-magic-lamp-effect
 
-Name:           %{fullname}
-# Postman sometimes likes to include a hypen in the version number,
-# which is not allowed in RPM version numbers. This is a workaround for that.
-Version:        %(echo %{real_version} | tr '-' '~')
-Release:        1%{?dist}
-Summary:        Postman - Platform for building and using APIs
+%global uuid s76-scheduler@mattjakeman.com
 
-License:        Freeware
-URL:            https://www.postman.com/
+# 定义软件包名、版本、发布号。版本号可从仓库的 metadata.json 或 Tag 中获取
+Name:        gnome-shell-extension-system76-scheduler
+Version:     {{{ git_dir_version }}}
+Release:     1%{?dist}
+Summary:	 Standalone GNOME Shell integration for system76-scheduler to make the desktop more responsive.
 
-Source0:        https://dl.pstmn.io/download/version/%{real_version}/linux64#/%{fullname}-%{version}-linux-x64.tar.gz
-Source1:        %{fullname}.desktop
+# 许可证和项目主页，请根据仓库信息填写
+Group:       User Interface/Desktops
+License:     GPLv3
+URL:         https://github.com/KyleGospo/s76-scheduler-plugin
+Source0:     https://github.com/KyleGospo/s76-scheduler-plugin/archive/refs/heads/master.tar.gz
 
-ExclusiveArch:  x86_64
 
+BuildArch:   noarch
+
+Requires:    gnome-shell >= 3.12
+Requires:    system76-scheduler
+
+# 描述
 %description
-Postman is an API platform for building and using APIs.
-Postman simplifies each step of the API lifecycle and
-streamlines collaboration so you can create better APIs faster.
+This is a standalone extension that integrates system76-scheduler without needing pop-shell installed. The majority of code in this plugin comes from pop-shell and is used under the GPL-3.0 licence.
 
+# 准备阶段：解压源码
 %prep
-%setup -q -n ./%{app_name}/app
+%autosetup -n s76-scheduler-plugin-master
 
+# 构建阶段：这是关键，将扩展文件复制到正确位置
+%build
+# Nothing to build
+
+# 安装阶段：这是关键，将扩展文件复制到正确位置
 %install
-# Remove the build root
-%__rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}
+install -Dp -m 0644 {extension.js,metadata.json} \
+  %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/
 
-# Start installing the application to the build root (while also creating another build root)
-%__install -d %{buildroot}{/opt/%{app_name},%{_bindir},%{_datadir}/applications}
-%__install -d %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+# 清理：确保不打包 .git 等无关目录
+rm -rf %{buildroot}%{_datadir}/gnome-shell/extensions/%{name}/.git
 
-# Copy the application files to the application directory
-%__cp -a . %{buildroot}/opt/%{app_name}
-
-# Change filemode to prevent "permission denied" error
-%__chmod 0755 %{buildroot}/opt/%{app_name}/chrome_crashpad_handler
-
-# Install the desktop file
-%__install -Dm 0644 %{SOURCE1} -t %{buildroot}%{_datadir}/applications
-
-# Create a symlink to the application binary
-%__ln_s /opt/%{app_name}/%{fullname} %{buildroot}%{_bindir}
-
-# Install application icon
-%__install -Dm 0644 ./resources/app/assets/icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{fullname}.png
-
+# 定义哪些文件将被打入最终的RPM包
 %files
-/opt/%{app_name}
-%{_bindir}/%{fullname}
-%{_datadir}/applications/%{fullname}.desktop
-%{_datadir}/icons/hicolor/128x128/apps/%{fullname}.png
+%license LICENSE
+%{_datadir}/gnome-shell/extensions/%{uuid}/
 
+# 更新日志（可选，但建议记录）
+# 修正日期格式：将未来的日期 2026 改为过去或现在的有效日期
 %changelog
-%autochangelog
+{{{ git_dir_changelog }}}
