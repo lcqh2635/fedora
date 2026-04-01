@@ -33,7 +33,7 @@ URL:            https://github.com/boerdereinar/copyous
 # 源代码压缩包。可以指向 GitHub 的 Release 或直接使用克隆的源码
 # 方式1：指向 Release (推荐)
 # 这里假设源码是以 Zip 包形式发布，且文件名包含 UUID
-Source0:        https://github.com/boerdereinar/copyous/releases/download/v%{version}/%{uuid}.zip
+Source0:        %{url}/releases/download/v%{version}/%{uuid}.zip
 # 方式2：使用本地克隆目录打包（用于测试）
 # Source0: %{name}-%{version}.tar.gz
 
@@ -49,7 +49,7 @@ BuildRequires:  glib2
 # BuildRequires:  gnome-shell-devel
 # --- 运行依赖 (Requires) 用户安装此包时必须存在的软件 ---
 # gnome-shell: 扩展运行的宿主环境。
-Requires:       gnome-shell
+Requires:       gnome-shell >= 45
 # glib2: 运行时库，用于处理 GSettings 配置。
 Requires:       glib2
 # --- 推荐依赖 (Recommends) 非强制，但强烈建议安装以获得完整功能 ---
@@ -87,6 +87,11 @@ Copyous 是一个专为 GNOME 桌面设计的现代化剪贴板管理器。
 # 如果项目有构建脚本（如 make, npm build），请在此处添加
 # 本例中留空
 
+# gsettings list-schemas | grep 'org.gnome.shell.extensions'
+# 列出所有系统级扩展
+# gnome-extensions list --system
+# 查看所有系统级扩展的文件目录
+# nautilus admin:/usr/share/gnome-shell/extensions
 %install
 mkdir -p %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}
 cp -r -p * %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/
