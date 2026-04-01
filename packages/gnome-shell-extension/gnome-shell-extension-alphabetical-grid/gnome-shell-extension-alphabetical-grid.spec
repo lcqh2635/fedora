@@ -3,6 +3,7 @@
 # 源代码仓库 https://github.com/hermes83/compiz-alike-magic-lamp-effect
 # git clone --depth=1 https://github.com/hermes83/compiz-alike-magic-lamp-effect.git
 
+
 %global uuid s76-scheduler@mattjakeman.com
 
 # 定义软件包名、版本、发布号。版本号可从仓库的 metadata.json 或 Tag 中获取
