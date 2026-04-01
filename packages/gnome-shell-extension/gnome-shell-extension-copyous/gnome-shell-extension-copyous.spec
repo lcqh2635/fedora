@@ -73,31 +73,81 @@ Copyous 是一个专为 GNOME 桌面设计的现代化剪贴板管理器。
 
 
 # ==============================================================================
-# 5. 准备阶段 (%prep)
+# 3. 构建阶段 (Build Stages)
 # ==============================================================================
-# 准备阶段：解压源码
+
+# ------------------------------------------------------------------------------
+# %prep - 准备阶段
+# 作用：解压源码，应用补丁
+# ------------------------------------------------------------------------------
 %prep
+# %setup 是宏，相当于自动执行了 tar -xzvf 等操作
 # -c: 创建目录
-# -T: 不使用默认的 tar 结构（因为我们下载的是 zip 且结构可能不标准）
-# -a 0: 使用 Source0
+# -T: 不使用默认的 tar 命令（因为我们的 Source0 可能是 zip 或特殊结构）
+# -a 0: 处理 Source0
 %setup -c -T -a 0
 
-# %build
-# 对于纯 JavaScript 的 GNOME 扩展，通常不需要编译步骤
-# 如果项目有构建脚本（如 make, npm build），请在此处添加
-# 本例中留空
+# ------------------------------------------------------------------------------
+# %build - 编译阶段
+# 作用：编译源代码
+# ------------------------------------------------------------------------------
+%build
+# 对于 GNOME 扩展（纯 JS），通常不需要编译
+# 如果是 C/C++ 项目，这里通常是:
+# %configure
+# make %{?_smp_mflags}
 
+# ------------------------------------------------------------------------------
+# %install - 安装阶段
+# 作用：将文件复制到临时目录 (%{buildroot})
+# ------------------------------------------------------------------------------
+%install
+# 清理旧的构建目录
+rm -rf %{buildroot}
+
+# 1. 创建目标目录结构
+# %{_datadir} 通常是 /usr/share
+mkdir -p %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}
+
+# 2. 复制文件
+# 使用 cp -p 保留文件时间戳和权限
+cp -r -p * %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/
+
+
+# ==============================================================================
+# 4. 脚本阶段 (Scriptlets)
+# ==============================================================================
+# %post - 安装后脚本
+# 用户执行 dnf install 后运行
+%post
+# 编译 GSettings 模式，使设置生效
+# || : 表示即使出错也不要中断安装
 # gsettings list-schemas | grep 'org.gnome.shell.extensions'
 # 列出所有系统级扩展
 # gnome-extensions list --system
 # 查看所有系统级扩展的文件目录
 # nautilus admin:/usr/share/gnome-shell/extensions
-%install
-mkdir -p %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}
-cp -r -p * %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/
-glib-compile-schemas %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/schemas
+glib-compile-schemas %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/schemas/ || :
 
+# %postun - 卸载后脚本
+# $1 参数含义：0=完全卸载, 1=升级
+%postun
+if [ $1 -eq 0 ]; then
+    # 仅在完全卸载时清理缓存
+    glib-compile-schemas %{_datadir}/gnome-shell/extensions/%{uuid}/schemas/ || :
+fi
+
+
+# ==============================================================================
+# 5. 文件列表 (%files)
+# ==============================================================================
 %files
+# %license 标记许可证文件，RPM 策略要求必须包含
+%license LICENSE
+
+# %doc 标记文档文件
+%doc README.md
+
 %{_datadir}/gnome-shell/extensions/%{uuid}
 
 %changelog
