@@ -37,10 +37,10 @@ Source0:        https://github.com/boerdereinar/copyous/releases/download/v%{ver
 # --- 构建依赖 (BuildRequires) 这些是编译或打包过程中需要的工具，用户安装时不需要 ---
 # glib2-devel: 提供 glib-compile-schemas 工具。
 # 这是必须的，因为我们需要在打包时或安装时编译 GSettings 的 XML 模式文件。
-BuildRequires:  glib2-devel
+BuildRequires:  glib2
 # gnome-shell-devel: 提供 GNOME Shell 的开发宏和头文件。
 # 虽然不是所有扩展都严格需要，但加上它可以确保环境一致性。
-BuildRequires:  gnome-shell-devel
+# BuildRequires:  gnome-shell-devel
 # --- 运行依赖 (Requires) 用户安装此包时必须存在的软件 ---
 # gnome-shell: 扩展运行的宿主环境。
 Requires:       gnome-shell
@@ -76,10 +76,7 @@ Copyous 是一个专为 GNOME 桌面设计的现代化剪贴板管理器。
 # -a 0: 使用 Source0
 %setup -c -T -a 0
 
-# 将下载的源码目录重命名为标准的 %{name}-%{version}，确保后续步骤能正确找到文件
-mv %{uuid} %{name}-%{version}
-
-%build
+# %build
 # 对于纯 JavaScript 的 GNOME 扩展，通常不需要编译步骤
 # 如果项目有构建脚本（如 make, npm build），请在此处添加
 # 本例中留空
@@ -89,12 +86,7 @@ mkdir -p %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}
 cp -r -p * %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/
 glib-compile-schemas %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/schemas
 
-cp %{SOURCE1} ./
-cp %{SOURCE2} ./
-
 %files
-%license LICENSE
-%doc README.md
 %{_datadir}/gnome-shell/extensions/%{uuid}
 
 %changelog
